@@ -28,9 +28,17 @@ async function run() {
         await client.connect();
 
         const shopByConditionCollection = client.db("online-pharmacy-db").collection("shopByCondition");
+        const cartCollection = client.db("online-pharmacy-db").collection("cartCollection");
 
         app.get("/shopByCondition", async (req, res) => {
             const result = await shopByConditionCollection.find().toArray();
+            res.send(result);
+        })
+
+        app.post("/carts", async (req, res) => {
+            const items = req.body;
+            console.log(items);
+            const result = await cartCollection.insertOne(items);
             res.send(result);
         })
 
