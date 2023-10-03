@@ -37,7 +37,7 @@ async function run() {
 
         app.get("/shopByCondition/:id", async (req, res) => {
             const id = req.params.id;
-            const query = {_id: id};
+            const query = { _id: id };
             const result = await shopByConditionCollection.findOne(query);
             res.send(result);
         })
@@ -61,9 +61,9 @@ async function run() {
 
         app.delete("/carts/:id", async (req, res) => {
             const id = req.params.id;
-            const query = {_id: new ObjectId(id)};
+            const query = { _id: new ObjectId(id) };
             const result = await cartCollection.deleteOne(query);
-            res.send(result); 
+            res.send(result);
         })
 
         // Send a ping to confirm a successful connection
