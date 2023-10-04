@@ -28,6 +28,7 @@ async function run() {
         await client.connect();
 
         const shopByConditionCollection = client.db("online-pharmacy-db").collection("shopByCondition");
+        const sexualWellnessCollection = client.db("online-pharmacy-db").collection("sexualWellness");
         const cartCollection = client.db("online-pharmacy-db").collection("cartCollection");
 
         app.get("/shopByCondition", async (req, res) => {
@@ -39,6 +40,18 @@ async function run() {
             const id = req.params.id;
             const query = { _id: id };
             const result = await shopByConditionCollection.findOne(query);
+            res.send(result);
+        })
+
+        app.get("/sexualWellness", async (req, res) => {
+            const result = await sexualWellnessCollection.find().toArray();
+            res.send(result);
+        })
+
+        app.get("/sexualWellness/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = {_id: id};
+            const result = await sexualWellnessCollection.findOne(query);
             res.send(result);
         })
 
