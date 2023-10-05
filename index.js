@@ -33,6 +33,7 @@ async function run() {
         const vitaminsAndSupplementsCollection = client.db("online-pharmacy-db").collection("vitaminsAndSupplements");
         const medicalDevicesCollection = client.db("online-pharmacy-db").collection("medicalDevices");
         const personalCareCollection = client.db("online-pharmacy-db").collection("personalCare");
+        const healthAndWellnessCollection = client.db("online-pharmacy-db").collection("healthAndWellness");
         const cartCollection = client.db("online-pharmacy-db").collection("cartCollection");
 
         app.get("/shopByCondition", async (req, res) => {
@@ -104,6 +105,18 @@ async function run() {
             const id = req.params.id;
             const query = {_id: id}
             const result = await personalCareCollection.findOne(query);
+            res.send(result);
+        })
+
+        app.get("/healthAndWellness", async (req, res) => {
+            const result = await healthAndWellnessCollection.find().toArray();
+            res.send(result);
+        })
+
+        app.get("/healthAndWellness/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = {_id: id}
+            const result = await healthAndWellnessCollection.findOne(query);
             res.send(result);
         })
 
