@@ -36,6 +36,7 @@ async function run() {
         const healthAndWellnessCollection = client.db("online-pharmacy-db").collection("healthAndWellness");
         const babyCareCollection = client.db("online-pharmacy-db").collection("babyCare");
         const cartCollection = client.db("online-pharmacy-db").collection("cartCollection");
+        const orderCollection = client.db("online-pharmacy-db").collection("orders")
 
         app.get("/shopByCondition", async (req, res) => {
             const result = await shopByConditionCollection.find().toArray();
@@ -154,6 +155,22 @@ async function run() {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await cartCollection.deleteOne(query);
+            res.send(result);
+        })
+
+        app.post("/orders", async (req, res) => {
+            const item = req.body;
+            const result = await orderCollection.insertOne(item);
+            res.send(result);
+        })
+
+        app.get("/orders", async (req, res) => {
+            const email = req.query.email;
+            if (!email) {
+                res.send([]);
+            }
+            const query = { userEmail: email };
+            const result = await orderCollection.find(query).toArray();
             res.send(result);
         })
 
