@@ -1,5 +1,4 @@
 const express = require('express');
-const multer = require('multer')
 const path = require('path');
 const app = express();
 const cors = require('cors');
@@ -40,38 +39,6 @@ async function run() {
         const orderCollection = client.db("online-pharmacy-db").collection("orders");
         const prescriptionCollection = client.db("online-pharmacy-db").collection("prescriptions")
 
-        // Multer configuration for file storage
-        const storage = multer.diskStorage({
-            destination: (req, file, cb) => {
-                cb(null, 'uploads/'); // Store uploads in the 'uploads' directory
-            },
-            filename: (req, file, cb) => {
-                cb(null, Date.now() + path.extname(file.originalname));
-            },
-        });
-
-        const upload = multer({
-            storage: storage,
-            fileFilter: (req, file, cb) => {
-                if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
-                    cb(null, true);
-                } else {
-                    cb(null, false);
-                    return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
-                }
-            }
-        });
-
-        // Add this error handler after setting up the multer middleware
-        app.use((error, req, res, next) => {
-            if (error instanceof multer.MulterError) {
-                // Multer error occurred (e.g., file format not allowed)
-                res.status(400).json({ error: 'Invalid file format. Only .png, .jpg, and .jpeg formats are allowed.' });
-            } else {
-                // Handle other types of errors here
-                res.status(500).json({ error: 'Internal server error' });
-            }
-        });
 
         app.get("/shopByCondition", async (req, res) => {
             const result = await shopByConditionCollection.find().toArray();
@@ -209,32 +176,21 @@ async function run() {
             res.send(result);
         })
 
-        app.post('/upload', upload.single('myImage'), async (req, res) => {
-            if (!req.file) {
-                return res.status(400).send('No file uploaded.');
+        app.post('/upload', async (req, res) => {
+            const query = req.body;
+            const result = await prescriptionCollection.insertOne(query);
+            res.send(result);
+        })
+
+        app.get('/upload', async (req, res) => {
+            const email = req.query.email;
+            if(!email) {
+                res.send([])
             }
-
-            // Access the user's email from req.body
-            const userEmail = req.body.email;
-
-            // Assuming you have a MongoDB collection for images
-            // Create an object representing the image
-            const image = {
-                filename: req.file.filename,
-                userEmail: userEmail, // Associate the image with the user's email
-                // You can add other image-related data here
-            };
-
-            try {
-                // Insert the image object into your MongoDB collection
-                const result = await prescriptionCollection.insertOne(image);
-
-                res.send('Image uploaded and saved to MongoDB successfully.');
-            } catch (error) {
-                console.error('Error saving image to MongoDB:', error);
-                res.status(500).send('Error saving image to MongoDB.');
-            }
-        });
+            const query = {userEmail: email}
+            const result = await prescriptionCollection.find(query).toArray();
+            res.send(result);
+        })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
