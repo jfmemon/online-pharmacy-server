@@ -27,6 +27,7 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
 
+        const userCollection = client.db("online-pharmacy-db").collection("users");
         const shopByConditionCollection = client.db("online-pharmacy-db").collection("shopByCondition");
         const sexualWellnessCollection = client.db("online-pharmacy-db").collection("sexualWellness");
         const birthControlCollection = client.db("online-pharmacy-db").collection("birthControl");
@@ -39,6 +40,12 @@ async function run() {
         const orderCollection = client.db("online-pharmacy-db").collection("orders");
         const prescriptionCollection = client.db("online-pharmacy-db").collection("prescriptions")
 
+
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await userCollection.insertOne(user);
+            res.send(result);
+        })
 
         app.get("/shopByCondition", async (req, res) => {
             const result = await shopByConditionCollection.find().toArray();
@@ -184,10 +191,10 @@ async function run() {
 
         app.get('/upload', async (req, res) => {
             const email = req.query.email;
-            if(!email) {
+            if (!email) {
                 res.send([])
             }
-            const query = {userEmail: email}
+            const query = { userEmail: email }
             const result = await prescriptionCollection.find(query).toArray();
             res.send(result);
         })
