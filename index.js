@@ -252,6 +252,11 @@ async function run() {
             res.send(result);
         })
 
+        app.get("/allOrders", verifyJWT, verifyAdmin, async (req, res) => {
+            const result = await orderCollection.find().toArray();
+            res.send(result);
+        })
+
         app.get("/orders", async (req, res) => {
             const email = req.query.email;
             if (!email) {
@@ -259,6 +264,13 @@ async function run() {
             }
             const query = { userEmail: email };
             const result = await orderCollection.find(query).toArray();
+            res.send(result);
+        })
+
+        app.delete("/orders/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await orderCollection.deleteOne(query);
             res.send(result);
         })
 
