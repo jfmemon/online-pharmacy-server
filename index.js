@@ -163,8 +163,21 @@ async function run() {
 
         app.get("/birthControl/:id", async (req, res) => {
             const id = req.params.id;
-            const query = { _id: id };
+            const query = { _id: new ObjectId(id) };
             const result = await birthControlCollection.findOne(query);
+            res.send(result);
+        })
+
+        app.delete("/birthControl/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await birthControlCollection.deleteOne(query);
+            res.send(result);
+        })
+
+        app.post("/birthControl", verifyJWT, verifyAdmin, async (req, res) => {
+            const newItem = req.body;
+            const result = await birthControlCollection.insertOne(newItem);
             res.send(result);
         })
 
@@ -175,8 +188,21 @@ async function run() {
 
         app.get("/vitaminsAndSupplements/:id", async (req, res) => {
             const id = req.params.id;
-            const query = { _id: id };
+            const query = { _id: new ObjectId(id) };
             const result = await vitaminsAndSupplementsCollection.findOne(query);
+            res.send(result);
+        })
+
+        app.delete("/vitaminsAndSupplements/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await vitaminsAndSupplementsCollection.deleteOne(query);
+            res.send(result);
+        })
+
+        app.post("/vitaminsAndSupplements", verifyJWT, verifyAdmin, async (req, res) => {
+            const newItem = req.body;
+            const result = await vitaminsAndSupplementsCollection.insertOne(newItem);
             res.send(result);
         })
 
@@ -187,8 +213,21 @@ async function run() {
 
         app.get("/medicalDevices/:id", async (req, res) => {
             const id = req.params.id;
-            const query = { _id: id }
+            const query = { _id: new ObjectId(id) }
             const result = await medicalDevicesCollection.findOne(query);
+            res.send(result);
+        })
+
+        app.delete("/medicalDevices/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await medicalDevicesCollection.deleteOne(query);
+            res.send(result);
+        })
+
+        app.post("/medicalDevices", verifyJWT, verifyAdmin, async (req, res) => {
+            const newItem = req.body;
+            const result = await medicalDevicesCollection.insertOne(newItem);
             res.send(result);
         })
 
@@ -199,8 +238,21 @@ async function run() {
 
         app.get("/personalCare/:id", async (req, res) => {
             const id = req.params.id;
-            const query = { _id: id }
+            const query = { _id: new ObjectId(id) }
             const result = await personalCareCollection.findOne(query);
+            res.send(result);
+        })
+
+        app.delete("/personalCare/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await personalCareCollection.deleteOne(query);
+            res.send(result);
+        })
+
+        app.post("/personalCare", verifyJWT, verifyAdmin, async (req, res) => {
+            const newItem = req.body;
+            const result = await personalCareCollection.insertOne(newItem);
             res.send(result);
         })
 
