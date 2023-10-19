@@ -131,6 +131,12 @@ async function run() {
             res.send(result);
         })
 
+        app.post("/sexualWellness", verifyJWT, verifyAdmin, async (req, res) => {
+            const newItem = req.body;
+            const result = await sexualWellnessCollection.insertOne(newItem);
+            res.send(result);
+        })
+
         app.get("/sexualWellness", async (req, res) => {
             const result = await sexualWellnessCollection.find().toArray();
             res.send(result);
