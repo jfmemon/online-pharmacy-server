@@ -288,8 +288,21 @@ async function run() {
 
         app.get("/babyCare/:id", async (req, res) => {
             const id = req.params.id;
-            const query = { _id: id };
+            const query = { _id: new ObjectId(id) };
             const result = await babyCareCollection.findOne(query);
+            res.send(result);
+        })
+
+        app.delete("/babyCare/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await babyCareCollection.deleteOne(query);
+            res.send(result);
+        })
+
+        app.post("/babyCare", verifyJWT, verifyAdmin, async (req, res) => {
+            const newItem = req.body;
+            const result = await babyCareCollection.insertOne(newItem);
             res.send(result);
         })
 
