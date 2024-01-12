@@ -57,6 +57,7 @@ async function run() {
         const cartCollection = client.db("online-pharmacy-db").collection("cartCollection");
         const orderCollection = client.db("online-pharmacy-db").collection("orders");
         const prescriptionCollection = client.db("online-pharmacy-db").collection("prescriptions")
+        const contactsCollection = client.db("online-pharmacy-db").collection("contacts")
 
 
         app.post('/jwt', (req, res) => {
@@ -78,6 +79,7 @@ async function run() {
 
         app.post('/users', async (req, res) => {
             const user = req.body;
+            console.log(user);
             const result = await userCollection.insertOne(user);
             res.send(result);
         })
@@ -390,6 +392,17 @@ async function run() {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await prescriptionCollection.deleteOne(query);
+            res.send(result);
+        })
+
+        app.post("/contacts", async (req, res) => {
+            const newItem = req.body;
+            const result = await contactsCollection.insertOne(newItem);
+            res.send(result);
+        })
+
+        app.get("/contacts", verifyJWT, verifyAdmin, async (req, res) => {
+            const result = await contactsCollection.find().toArray();
             res.send(result);
         })
 
